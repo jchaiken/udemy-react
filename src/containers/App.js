@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person';
+import styles from './App.css';
+import Person from '../components/Persons/Person/Person';
+import ErrorBoundry from '../ErrorBoundry/ErrorBoundry';
 
 class App extends Component {
   state = {
@@ -48,51 +49,44 @@ class App extends Component {
   }
 
   render() {
-
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    };
-
-    // an alternative to the terinary option below
     let persons = null;
+    let btnClass = '';
 
     if (this.state.showPersons) {
       persons = (
         <div>
           {this.state.persons.map((person, index) => {
-            return <Person
-              click={this.deletePersonHandler}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changed={(event) => this.nameChangedHandler(event, person.id)} />
+            // the key has to be placed in the outer element in a map method
+            return <ErrorBoundry key={person.id}>
+                <Person
+                click={this.deletePersonHandler}
+                name={person.name}
+                age={person.age}                
+                changed={(event) => this.nameChangedHandler(event, person.id)} />
+              </ErrorBoundry>
           })}
         </div>
       );
-      style.backgroundColor = 'red';      
+      btnClass = styles.Red;      
     }
 
     const classes = [];
     if (this.state.persons.length <= 2) {
-      classes.push('red');  // classes = ['red']
+      classes.push( styles.red );
     }
     if (this.state.persons.length <= 1) {
-      classes.push('bold');  // classes = ['red', 'bold']
+      classes.push( styles.bold );
     }
 
     return (
-      <div className="App">
+      <div className={styles.App}>
+      {/* <div className="App"> */}
         <h1>This is a React App!!!</h1>
         <p className={classes.join(' ')}>Yayyy...autoclose works!</p>
         
-        <button
-          style={style}
-          onClick={this.togglePersonsHandler}>Toggle Persons</button>
+        <button className={btnClass} onClick={this.togglePersonsHandler}>
+          Toggle Persons
+        </button>
         
         {persons}
       </div>
