@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+
 import styles from './App.css';
-import Person from '../components/Persons/Person/Person';
-import ErrorBoundry from '../ErrorBoundry/ErrorBoundry';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit'
 
 class App extends Component {
   state = {
@@ -50,48 +51,23 @@ class App extends Component {
 
   render() {
     let persons = null;
-    let btnClass = '';
-
     if (this.state.showPersons) {
-      persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            // the key has to be placed in the outer element in a map method
-            return <ErrorBoundry key={person.id}>
-                <Person
-                click={this.deletePersonHandler}
-                name={person.name}
-                age={person.age}                
-                changed={(event) => this.nameChangedHandler(event, person.id)} />
-              </ErrorBoundry>
-          })}
-        </div>
-      );
-      btnClass = styles.Red;      
-    }
-
-    const classes = [];
-    if (this.state.persons.length <= 2) {
-      classes.push( styles.red );
-    }
-    if (this.state.persons.length <= 1) {
-      classes.push( styles.bold );
+      persons = <Persons 
+            persons={this.state.persons}
+            clicked={this.deletePersonHandler}
+            changed={this.nameChangedHandler} />;
     }
 
     return (
       <div className={styles.App}>
-      {/* <div className="App"> */}
-        <h1>This is a React App!!!</h1>
-        <p className={classes.join(' ')}>Yayyy...autoclose works!</p>
-        
-        <button className={btnClass} onClick={this.togglePersonsHandler}>
-          Toggle Persons
-        </button>
-        
+        <Cockpit
+          appTitle={this.props.title}
+          showPersons={this.state.showPersons}
+          persons={this.state.persons}
+          clicked={this.togglePersonsHandler}/>
         {persons}
       </div>
     );
-    
   }
 }
 
